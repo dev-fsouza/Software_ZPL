@@ -1,4 +1,5 @@
 # Software_ZPL
 **Software para enviar arquivo ZPL para impressora de etiquetas**
-Software criado usando .NET winForm C#<br>
+<br>Software criado usando .NET WinForm e C#<br>
+
 
