@@ -1,0 +1,11 @@
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.csproj.AssemblyReference.cache
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.Form1.resources
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.Properties.Resources.resources
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.csproj.GenerateResource.cache
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.csproj.CoreCompileInputs.cache
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\bin\Debug\App_CaravanaElgin.exe.config
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\bin\Debug\App_CaravanaElgin.exe
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\bin\Debug\App_CaravanaElgin.pdb
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.exe
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.pdb
+C:\Users\teste\source\repos\App_CaravanaElgin\App_CaravanaElgin\obj\Debug\App_CaravanaElgin.exe.config

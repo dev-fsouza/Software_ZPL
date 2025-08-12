@@ -1,0 +1,302 @@
+﻿using System;
+using System.Drawing.Printing;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace App_CaravanaElgin
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            LoadInstalledPrinters();
+        }
+
+        private void LoadInstalledPrinters()
+        {
+            foreach (string printer in PrinterSettings.InstalledPrinters)
+            {
+                comboPrinters.Items.Add(printer);
+            }
+
+            if (comboPrinters.Items.Count > 0)
+                comboPrinters.SelectedIndex = 0;
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            string printerName = comboPrinters.SelectedItem.ToString();
+            string zplData = txtZpl.Text;
+
+            if (string.IsNullOrWhiteSpace(zplData))
+            {
+                MessageBox.Show("Insira o conteúdo ZPL.");
+                return;
+            }
+
+            bool success = RawPrinterHelper.SendStringToPrinter(printerName, zplData);
+            // MessageBox.Show(success ? "Impresso com sucesso!" : "Erro ao imprimir.");//
+
+
+        }
+
+       
+        private ComboBox comboPrinters;
+
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            this.comboPrinters = new System.Windows.Forms.ComboBox();
+            this.txtZpl = new System.Windows.Forms.TextBox();
+            this.btnPrint = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnLoadFile = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // comboPrinters
+            // 
+            this.comboPrinters.FormattingEnabled = true;
+            resources.ApplyResources(this.comboPrinters, "comboPrinters");
+            this.comboPrinters.Name = "comboPrinters";
+            // 
+            // txtZpl
+            // 
+            this.txtZpl.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            resources.ApplyResources(this.txtZpl, "txtZpl");
+            this.txtZpl.Name = "txtZpl";
+            this.txtZpl.ReadOnly = true;
+            // 
+            // btnPrint
+            // 
+            this.btnPrint.BackColor = System.Drawing.Color.Green;
+            resources.ApplyResources(this.btnPrint, "btnPrint");
+            this.btnPrint.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click_1);
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Name = "label2";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // btnLoadFile
+            // 
+            this.btnLoadFile.BackColor = System.Drawing.SystemColors.ControlDark;
+            resources.ApplyResources(this.btnLoadFile, "btnLoadFile");
+            this.btnLoadFile.ForeColor = System.Drawing.Color.Black;
+            this.btnLoadFile.Name = "btnLoadFile";
+            this.btnLoadFile.UseVisualStyleBackColor = false;
+            this.btnLoadFile.Click += new System.EventHandler(this.btnLoadFile_Click);
+            // 
+            // Form1
+            // 
+            this.AcceptButton = this.btnPrint;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            resources.ApplyResources(this, "$this");
+            this.BackgroundImage = global::App_CaravanaElgin.Properties.Resources.WallPaper_1024x768;
+            this.Controls.Add(this.btnLoadFile);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.btnPrint);
+            this.Controls.Add(this.txtZpl);
+            this.Controls.Add(this.comboPrinters);
+            this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.Name = "Form1";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        private TextBox txtZpl;
+        private Button btnPrint;
+        private Label label2;
+
+        private void btnPrint_Click_1(object sender, EventArgs e)
+        {
+            if (comboPrinters.SelectedItem == null)
+            {
+                MessageBox.Show("Selecione uma impressora.");
+                return;
+            }
+
+            string printerName = comboPrinters.SelectedItem.ToString();
+            string zplData = txtZpl.Text;
+
+            if (string.IsNullOrWhiteSpace(zplData))
+            {
+                MessageBox.Show("Insira o conteúdo ZPL.");
+                return;
+            }
+
+            bool success = RawPrinterHelper.SendStringToPrinter(printerName, zplData);
+            //MessageBox.Show(success ? "Impresso com sucesso!" : "Erro ao imprimir.");//
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            txtZpl.Text = @"CT~~CD,~CC^~CT~
+^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
+^XA
+~SD10
+^PR4
+^MMT
+^PW799
+^LL1199
+^LS0
+^FO256,0^GFA,10368,10368,00036,:Z64:
+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:F6EC
+^FO0,928^GFA,01792,01792,00028,:Z64:
+eJztkj1qhkAURe9kINNFSwtBswPLKT6iRRZidjBluhn5INnWuJNZwiunECZP/C1SBQIheG2Ew+G+KwL/PenbuIs5SdCZC+ihoas74LAxD0KTCY8OOcpMgl/PTGcI/Ghm7J2ZQaOwekqd2RCMjU8IKanYRnmP7bDfMpKx9Ci8TYraSUiqxuQ3Fgjxg9vSZ8Rt9rwIpz7zOpcoQilUrLzYPMd3vj/U7KkIXbPnDk8QTPfsYdm75ZLaw/OSUgz1cuekZWzH405BlrreM6NqKrjvYIMjG/vVi7M3pK1v9AZ5/7b0lSXv40902qdDWPYVL+x57F5gz/SrV837sN05UANt2LO8r2jZc7v3l/6zH7IrV34/Xy7QMRQ=:6540
+^FO0,640^GFA,02048,02048,00032,:Z64:
+eJztkjFug0AQRf9qlAyF5W1dIOAGcenKyDfxEShdRAa0F4ObTG6w5RaIzWyCLadIlM4NQ4P09vFnZgHWWuuPMvHXkpX/h4MF78Yjz+04WUFpZpQ08Y13JLhAkG3ZBT1bYwY7wZ0bQaNPnvOYePLZ+R/8XFXICuqDfqtQn9yAeuE0SvRN66bcjJ4jz7hapkHahbtBorxFF7ZwQjMl7lzv99XCRzH+JX77p8jTri3Z9WF/XrgIAtQv0MsYadodNd+Fw+KT8gkpHyflPOVHMOn3H/wZteZnenSmcDhCGwj3/OEjRl+rn5vBqK8TlppfP/Yf1C82pkOkgCKz2v99/sQvyS/MgJY9ik2av1nyO919VaX8LXW46gb1RffXVI/7T/2Xxnn1W1uS053cfDUOX/Pb3vma5Ppq9SDC4sOm+0/7K0f2NUurXO//5j/7/3wuX+up9Qk7Q623:E5EA
+^FO448,576^GFA,01536,01536,00024,:Z64:
+eJztkDFOxDAQRR1NYQrkXCDY15jCEnskShcR61Uk0sERuAalrRS5Ro4QOherHcZOAgQJiZ79Lix9PX39+UJcddUfJOmHcVg+oLD3w8bPO7sKG7/3YeOrX3jvwMOE6hZROFAyKYGZ962ZTbLm7kwVyWOfjsEVHu+TOaMyRMCvTzQVXrRta63VxoySX4zv88o7iwKVquUTdN0Qp4fSx9tZO2GNNvIVxlOMJT7zs8q8VvBCzA8BxZJfeN3UsqaxisPCS49T4VXm+y/euyW/MbIX8lt+cg3eoM75AnKftO7J/XXzyPncv/rsT1O+11w4v8t9tnsp8D7sc/6JOH/b5yLynvDM+f4NurDuedW/1AeeroZy:6FC8
+^FO0,1056^GFA,02304,02304,00036,:Z64:
+eJztkrFqwzAURZ9xsBYjrxlE/Ael3RQodj+l/QOZrKFWGmiWkvySQqD+jWc0ZEtdCiWDiSspSptC6d7iO7zh6XC5vs8Avf6fQqSwD2UGgInkZnEh7bqzk3mGNOmsTVQJwT5VrVmUyjHqjEn2uT6kTSfDNsfOviKcZuYZyovNIxNaEsbvKrOoHaPEmQ/lqJeca0kp13OTAh2DzRnD2G1FhldrFcWimNtXmAbK+EzjASNHZnSNW8LHWlEqJtbnAB3ZA4qO0lGOXz786DOxPuWsIgxUUUUR48IzuF3y8dr6uDy5XiwpdHYyzj1zc8wz8HkIJiw2/SQmj7h0TObzvOxcnhyg6TLjI02eTPBv31U9O58yMElYBCqoaMQ8c+pntXP9ZAG+LWIKGC7oZ554WGyemKhtz7XtGV8XcWx8zGSXwt+r3Lh7kTav3b30imbGZ5VkI974u+ezlmAJobn7ve1nbTtUQUfeWYo//z+J1A9oLqLnO5bI33++Xr169foT+gAjF7nS:E849
+^FO0,1024^GFA,02304,02304,00036,:Z64:
+eJztUrFu2zAQPYJAbxHI1QNh/YLGGwo7/RMZ/QFm0xYFHrgYyerBQH+jUyrBg3+DBoeuGokgsHqnAHE7pUPaSW94pISHd493BzBjxr8G6QPxkXVo+UAhyEL2WTgKOXQLADWqIF8opF6m6yh8I7TCJ5If26sGL6+a9uoDotHH9q084pVrIWNEY37XmCmV0W8+ReEWJRSqD+7cH1B1UlB1CKjuO+9rN/ksad0aSMGO6Uew/CaMNq8j6sfsfZTk6Bzddo41y8+bYygqAP1SVD4iMvuNZLAHR+dJ80DpGHbSrEtBMdpxR96nbTv5LBRrOA9t+hM0rCmhqT13oPH+yz0H1N9XtI4r9llR2v60WWfgJNHjs83iE0Uz5VHH4Krb/lSSGj7pb8Q+UHKtr68+ksfoFApK/elAOhseYYwGHPkmiUYNbtF3iJyn4jwyPOQR+hqB2W96zqyHJaUo8zKUuAHT8JbURATm4ZzayYfuOjVqyTNiyT3UlzKvudPMQ303bYgjirI/O0oP+LiX/bF7y623e1Pxi/+EDOs96PZdyV/5qA/ymTFjxv/GL184sqE=:75C4
+^FO0,768^GFA,02304,02304,00036,:Z64:
+eJztUrFKxEAUfOGBWyjJlSkW8wuxWyHc/Yr+wQabq8zKgtflfkD8jsPGhMBdd7XlhhTXBmxWCImbTQ5PECwtzBRT7BuGefMWYMKECX8LTzBULmhAMQdlHl76V2x75qMmyO5JvXAaICrBGsDprKY71SxUt9ZJ0YJXd7LppwKOrEcNK3euHxcpUF6uqJmurMbJTnxYJVOmqhQYq1LXTKXVyFMNjyWlNzsC/lW+vTBT4dTE+OR1OON00Czf5RNVhzWw63zf+2hsAoUPRcPY0qYafdTgszc+Tkso5ejsqO/zMhs0d/KZqQMxPkWfB7r0kjG0zJUafXDIMxvyQCAiHpp+onAWZ4OPHvO8bmyeBrBoNMMWTZ6PTH3bK7B7OQ0xSbiPQCjz41Fz7Gexsf1oIvc0ZChc+pUnvN25YVw8mp4r27Pc0jBEODPM8yHPouw8e6+g7lb2XmnEtPGJIr2ssvHuLamDhwY8lTi6vzvpOwTDbzwRP/+fOabnAgWm3obPf/9/Eyb8T3wCZQS8cg==:9145
+^FO0,960^GFA,04096,04096,00064,:Z64:
+eJztlLGO3DYURR/BhVk4IF2uAa70C1MSWEHq8h/pU3CrFZCFRUGFutUPGEY+w8XCoKBifmKLJwwQdwmBFCHiwTBP0truUyWALgbTcO4cvfsuBbBr165du3b9H8UjRJFcxn0mXKEggkq9g5JP3tJxydA0l9e/Viwqx5EhfAL4yPG1q3D1izMEkXzOvBb0gQAi9cASG1/8/tCc85CzoEAFFlgCdhEhx8avfnVZ+Fi1WCgsldv4PI0TBjp+R/x0aWLeEb+68MiT52mIVUwbP1PsWTDMAbXyuWDPIEGAGMcxLPx75g13tc7bcOOLjAXRen6UurB2m79Q3ZNweOvQSKwEf1r8TsHpFBb+X8TnLmRVF2+xlvyjYsi7x8yYDQ/mir0XgHfOWm2J/x5eEV8C+8Y/kF/eTPYtBSKuJQTGtX5zuH/xA38ULX7xMWqsBv648sk/xUjHp3bho8yO0SBl8yQBQTxKMMmt/hq4pPzv/MK/OXJJ+QnQxH9e+FNL87de6KM9IPG1huX7B7DJf+cnN2ONpr79g/hL/pk6TZ/sV36LqvytNrQQmWW0YZXRFKctAPo3IS7wkz+gObz9LCj7hS/m8QP52TjS/Iz4P1oSvFr5mdZsqdIimmnoB4do0BiThsGt86t5GgJtexzX+dWH3yMJpCQyFJnkHjZ/fUU8wRLe+Oas70Va95/BPB7t0rbRr379s22Cvcovy/NbTUV98RsxpL5vU6iwOZtGpY1P++8XfsIt//JdnWIt87TkH6RUgJu/EJQXH1PIiX9dkX/Zv4C7saP+8DSj5c5m+sGmaLM8UVeZlxTAvPlLJXnfnTzVO2Smknzlq26eOto/NTNG7mKpixqLsizU0CH9pCjgxa8umh3Z7GvlMNO5Zl6lY+rTTBeA/LTnwB0lU9x5nZ+16JOnwM5N+Hr//i75Z/enM+SXRpUcaZ7UpW5y5FdgK+JVsTS/0O2MhnfJidTFJjZb/1ggPtxTDgzFtSC+ID48sNHZlZ8DB3ozvCE+85b7ByoI803Q/+ZttWvXrl3/Ff0DbGCeEA==:020A
+^FO0,736^GFA,02304,02304,00036,:Z64:
+eJztUjGK3TAQHfPB6uQ2xWBfQaUq+yoOucBAml8YVssW7vQvkMNY/GKvIaNmy02nwvhnRh92lzTZQIoUfuCHBM9vnmYG4MCBAwf+FlFTBDhF3cqt0CkKDy9ydHIkpBFAbTXKrZB6Fe42pqr45Dbzb92u3zVdLrx/8AHWYKPfyyO+cVU01orGftTYksrqNx9jaJzAqBq/zzWhKgUVf1irKgRHxeccd7Anj8PN7zhIODfEm0M9rOH6JMmRaH0GYs3556zRLADNqwlXh2hCCLNU7InSLJrWpotujTQrm/Tkht2wj9d3n1GxpkZaZ4WV9G+q1sely9UaQi0BdcxcPHOtnHzzY4hNBD0k1rxIHt840ZQ8SiOFZ4VTVMsXPbEPwsQ+/u4jeWzj0aSLaol9rCbOY4HWkIpGLfSN29FxnsB5ZHiI9DU4BOYw16xplnO6OJkXv4sbIP3ZzmtiDfN19nef9cZzL3k2fGBNkx/ijTvNHB63MhGKycn+mORt24+yP/3Yg4V+tFeXf9s39aeFlDd+QvMZn/of+Rz43/EL8Le4lQ==:6203
+^FO640,992^GFA,01024,01024,00016,:Z64:
+eJztkD0OgkAQRseYOM2GbSkmeIXtnILAVexsx47SyhKvtMbWQ2zCBbakICDuQoEtiRVfM3l5mZ8MwJZ10W2sNHP3w32sxcQKl/2JXrJCtG8NQqedla9H7fry1Wflw0vwJP76ulNOLGE+i3NNTZzytN/bMyKZlOJ92juHQ8Gch/lAMvqBDAefAFejB+LIClKxcjmQodl7VzV1xlnYp+DobfnsyGC4J4GEnb61xHsn61655e/5AOxzOVI=:40F0
+^FO0,992^GFA,02048,02048,00032,:Z64:
+eJztUrFqwzAQlXDIdRDymkFNfsGdetDgpH+S/IHGQAMxBOolOGuHfktxCDRLyTco6Ac8eghRT3K8hEA7dGvecHe6x+PpTmLshhv+M+JTkzJtfKYgQyNlZuA7sQvHRanHPlMQTYPXZz7zR1dd6N3yOPKdLnieV1q3jsoHvtmpni9kFHiDs5Zv9Ju9RJ8Fz4GXvFR6+q4fysmcfwGbk+JT3Df6HOI6ylDbj9PIGBefRpZmigoZ/MEBCIwy0u/UkIJUySEn/lUEPj4BrAJv1wWizYt+YpcZg0Ji4I8AbMaJf85FguNYCb6pqN8RzI8kUwj+Q21ziWhcKoN/KmXD9wEGyEuyzlWCdAkxnCwYw+5ZHwMo9PNbciT/lZyZOGO1lFj5+YH4Hjea9AITCnTTiBYNahb0kK9T9Psn/5SGkOmLXRbM7c77j7ZuUPv3I//HaurgODo4wd22HpRhf8au3/z7k/9Taexy3ze15K70t7hA0had658J26J7nf+1/u4H/Q03/AW+AZQqnII=:C171
+^FO0,704^GFA,02048,02048,00032,:Z64:
+eJztUsFqg0AQVYTspcQcPQymn7DHKYj+Sj5BoYdACzEIyaVsf8nFQz+jK35A9LahEju7JoGWQHsrFB+4szOPx9uZ0XEmTJgw4a+QaBtit8opeHSgLWgv35hK0pvMHVxpI33cXnqmRv5kUm+QX/XeyW8HUwlCkzIpy4tjagsM0pW54Nymea0u/KhniLbCZwDMYU4md1n55m5bxsFtSRHwx1EPkKi5U1fiQw9F0Sd6eKWe5ojWf9kDcOIzuYe0owPTagfEB9zyiYbQ8pWIUTUixHUl6E0hYmP5FsBVM9LPgJe1E6WcMeolWnDXtIR69O8qAaQveo3WXyOO/BrgWTGnkztIy5oewbstzVQFZ30EkCrqvxFo/flDk8eOp8jf8ByIX7GtJD1X5siqlzsaNGS11YdhpJWZP/kfKxHh8SDm6A3L8/x9v98osz/yf5f7nur7nrPBVxs7P78Q8crsn/wPXiF8fCoUssGjV3zHdYeL2z/TdYfBbf7X+vsf9P8Fn4uGr8k=:D395
+^FO0,704^GFA,02048,02048,00064,:Z64:
+eJztlLGO20YQhmczgOYKg1s6xYbrRzjAzRpHS3kU+Q2o6lgwpzUIRI2he50rV2ChxohbNwlWuCKdsAICmAXByZCUU7t0AE+hhvz07fwzS4Af9f8uSipphoJ8oaHKVQLLGqCmnY/yuMZQcv/y1wdMFihgUDWoksJL2IaJ152Kmv0SvdPeZSqC5gxwwObK+zV3q7jEmIONGHEA7HVcBfYTb/vRH7YYKhtqe/UTN7vDyPcYNtxzWpH4tz0lYk9s0/bCs7/I8SnDsFTBWb/M8AkMZKCbpokjf0ZfEiS3wnjnqwKjRk9746rpqVRlqdIq3KtQ/hIeMqqE15Cr4/Ekb6iz9E8qFltK9yEZKnMMRKYoN7MeyhuUrsMzxOii+B28EL8B/M+/Ft7c/R5fSyDZrVHxp4Vzr9bnKw9kNB6+vL+kN2Gbk5n8wu8uSfzHyR/M28e0OUg2lVEBtDGw4ZlPsDCS/7Mf/Xf7hQE7ZODE/zSefzf2jz57s4/vgvidg/H3Zzhd85/8rNpwCWW6/0v8Y/6FPe7q+NWPIf/to/gjmKKQCeeFUafjHID8W6Z7aP27UK5f/5FJ9qNft00hPDaNXy/E7z5EKXgx+QvnUFZpxMd5W23VIWxCWW7Y2rl/2+5slGk3zdS/ffvn5SKBGCP5QVUY8mr2pxvxZcjhznPnznqY5l+ottmP28aNH/ncfY4c482qH88fncvgypda+tXIcRu4KwfLs1/mr0c/H+b86/7CKZnVIPnLOE0uJ573J7OcUcNxJf7bB+HH+Wfw3JD0T9yGSBAL1504xWI1yK6iNxJAO/N1bkjT8X2ysmXlg6HJb6ndkcxfq8MlkUq1qy6hquvKWgrySlWpK297h3tsvfChcEuH3vIja27lAoCc48Til2SqZ+9WndOyK3rQHcev9++fmj6pv6EU3pR5TUHyYGLaSVCQg+RCsE11+UVuZyqJWC44JU7X/cMofjhLDhiy20z8mh8H6LCByR+XsAD5MrwSP/pIvpMFQc/Rffs36kd9r/Uv0bmUuQ==:EE77
+^FO32,576^GFA,01280,01280,00020,:Z64:
+eJztkSFuAzEQRce1qqkKPD2ANXuNgqh7pYVhsWQQqWSvE1Bga8FeoiBSQGEctmBlZ7xVViovCMgHH3w9z3zbAA/dvVI18ydSS8bV9C3T08qRu3HTegRX7rBmtGZWdSqxFWtGFb8xWKAvnSkbFmt//JDbtAG0WChzUzBXbt4l4ZhezYtpSIR+OG4n4RjBAjM+IaKK4a2TZoaO5AyTo37vhwDSjQlnkr0IZeFQsrb4jLKX8FznhY8tQFNgp7Jw9Duv6yrnZJxwZtkbknAbdCiFLFoBfQxJuHft6bNy3JLeD26Sfp0eS1PnyU1OJYZ6j0mfM83C9aU/lSGUg3Aqpvou+DyqcInBWvtPn/rQPegKNZVtSg==:F5F9
+^FO0,512^GFA,01536,01536,00024,:Z64:
+eJztUDFqxDAQlLNw6qIn5BsqQu5LLhUISBsX6XzfSSnjQmW+oEOFWx+kuCKXzeokX0K4NkXAu+wsDMMyO0KstdZaf1n2vWyZoYkXfvtZNriM37ylqne/9OSu6lvpr97X4IzQwkDPqOOtSP2ZNxKp4ZbE+zRbT7uiVx0B5UHGyL2rfmSQIfCMjPvD/CGr/w283Gygw4Qj7mM7V/8nBUHw4IQBD/6x8tuj4ouKOpcoueR15dsnRW/Mh2aiqUneVN7cK+p/6utr5k7xrzw4Ocn3F73O/LMSgMkB+zlWfasu/gfI/ufiX8uOlh7zvxxRyWco+VikgaIdFj34V8HNeT6c84xK/Pf6AvQ5nqk=:0774
+^FO384,288^GFA,01920,01920,00020,:Z64:
+eJztkjFuxCAQRQdNQUmZbrlCTmAuldIKXm3BMZKjWNpij5G5QSYdBfFkALNRujRpIn9RWF9PM/yPAQ4d+k+yaz0RgqxWPrsXGAKhLEEyiizNiwVitrIGKeqtzZMNJDuhIJt6VC1TouHZ3ThARLbcOJ6QJnfmCfQDm2fYIz15o5xHNt0j9cApDickMzi9XuOC3Tkkl66LO1Obd+fSG9srBZiRxw6XaoKWg5B27ibF1Bw87gw5pLz9zKs5Es/3vL0XkaQ5Lm2v5O5F9YI/1xz2o+z9vVcO8gQKP3fv4SWt3pus3EXhrjrL75zvPesYnQeVu7LvPT+e8HueGzmQ57733nOeTJ7dRfsLo2eoYYsVDiJ2cDFDTdrejTCPN49sel42PYhb6tFp8qrtld//VIcO/Ym+ADI0zU0=:D424
+^FO256,320^GFA,01280,01280,00020,:Z64:
+eJztkDFuwzAMRb/AQVt0gSC+QWcDMdrD9AIJsmQoELYeOuZKNDL0GhR8AQdZjA5hKTvpGYoin/jL0xdFEfi/ehnxjScQP4Na600Lu5LhwCQHoc7ONhRmRxPTVHy65SqLziR1zjrLE6vTsc1ZU9trYlIqrIkxdCJVJ0MlxMSFpaMfY/0huubo5WyZooQvbAW6lYg4zWefPg3vOOiOF1jMLHjJqwT3nV1Rpuolci8rrCY2IOZ87qQ8v8SysNrd66XlFbXcoCms8fhZdjbUZMMvWyDrxcaRbKyna94ghZwvNqjn9tjP/ZKpKb27+ZZr4HuZdqckG2zmnP/CmE6FjRjnfnhDheC5cM899NBf0w8mZ51X:7EC1
+^FO640,1024^GFA,03200,03200,00020,:Z64:
+eJztlrFOwzAQhq9kCAMi5QkqsSCxsLKZx2KLHwd14RHwo3hELHhBsiorxzmNnbMvEgWVAdEbqurTp/NvtzkH4FS/UGfbVE+ZbTBVyAznshNqGfMT6xgbRDuqifWcabEEollg+4VXBXMjawrmRbzDWRDbOJwNcrvfZOpLDw/0jt3v2N4p35/O51fD9ByGJnl+FWqmfJM830rPdblf9txGelZJ7w2lx/JlDyvvozg/31i4G+g5vsbdTfYMdI7mAvSuzf2IWZo9gL7jnqEZVXua5ht5LfdGxr1XeNa3oDT3KB/0WkWPnd8ASKz0iBlV9CNvGxnPN54L1B7iDup+cZ4Jz4LMZyaP/74aZD+AB5EPlMg3QF/vo9nvDR3vF1eu+9G/TCvd28qjs1KG54tpFJnMgwsIxOLwzx5cxi/EWL49MwuehfO5H0IX92thPXuo6Tc3ysE980xnW6MCPLb8+R1e6OP9GPNgif3sLlti37tXyzt56Z62IyvvczOyxXeBnjMN4mDS+wYPHRZYelfhi5jE5oapHSW8SrWGU/3T+gQKEkYB:603F
+^FO544,704^GFA,03072,03072,00024,:Z64:
+eJztkr1KA0EUhe9kM4mkyCrMYOdPu4SklbAmIyT9BGbxFVJaWklIwASFPIIMaZR9AtHCTRNfY8sUYdVuq42zP/hDJvbCnmKKsx+Xc+5dgFy5cuX6Q4drqfWxw7V+db3U+sjpaH1j7W7he/pAgTvQ+lvmQ3MLT7fMb7pS65MOQxuVC7OZ5Uoj0s13GHU23MnEcgeNqYZX+UkR2G+zYh0/uXAJRoTCqC1tMzQf0y/IEcDVFVBPUE6oemJ3ZzJ0H8CHg+j6Y/m2qjWCRnaO+F4MCO4ixgkRlCSuO7t9loq3jdfR3Dftd/PkKz5HDDjqojOGCccZPxmo14c+Wgy9IKj5pTv/O23GOw5lGCd5rGSZEi7Q/Wj+8nIqy+M0P4ofnvFU8SCSvjcxH0IfFgPPBzUfaglfTHmieKZqcAxJoIJqC9Aqtc3xyAuP7KtWxU74vd2kA6UYMcHJudgXaYH4b6sG06A89OrLWnVVT/dTjBePBBKKV/vEHKeXsGK+EEJYHnmGtA3f+NE3V65cuf6pPgHqBXP6:5A2B
+^FO480,832^GFA,03840,03840,00040,:Z64:
+eJztlr9vJDUUx58zRxyk6ByqSxHO8A+glEic4hSI/4AOKTnRoy2RCDuOtggFUv6E+zfo4miLlHcddHG0RcpzdAiMmJ3He7ZnZ7LsJWloUKzdmdmZz3zt99ML8F8McTB/EKcRW3s/Jn+nb7P6kRv8UKw1Xs0NphEh3XmzilMDPZXf+XwlN9DT+fT8Pr1RPlV2FdffzMujc35VdJ/0VU503EJnlw+tjGA8GIG2asGcWvpRpPnVIzrs8Et42QDSR6LXaPH1OcbC5cck+pQuJF62iVMYDB7j2+MFx1If8yJl4hAr/mgMNZ4jnmBbuBlJeRZjH6hpayahlq2exLGaRnPiO+48sKkUyDFxetroE1/LoI+bI3kRzImrO3M1GDpH6XfZ51GdOK38HhB37RUZnDkJAv+gs57DNh1FlBdOn7pabIG+cMSVcK0DfPYzX1jYSHrywupTy+ljrhOX/bvJrhFtuUwc4qkjTiFzULgNjkQ1KdLMvSaO9fQtbpszQabgyrw+4l4xV/9K63vVcRxVtwOHbHrRs5QmxB1Vw/WNOFO2UnKJzo7CyeuBvSQk7GFaprA9R/6L1dB/+/T8a8c2cFiy/z5S1oh5Q/HQyhWODTAW1vJ10vPkP3Mco6K4ST/g8pwLbo7K6T9DU0+bWs5LHljo+cPETbFVVqGvKf/aCptep9jNHK3vHBtNXGCuEYWDLl2pfCuf9FwdlaUMN1QfEdBnPSwcxUV1XFCW7usGdIC6GDDJPCd0/ATeO4Qt+SpBu9FdXCl5QSG4U0+E/XRFdXKnHryInnOAgnI4fDJsVTn2lyFPe1vvNkfxqNa5JbgNLuP3c1S6T8hxMNpc4jQscWsgaeLdZT1Y5iQ82aKa2ywdUOx3j7aGnOeyoKBtbpQcq2KXROSBX4bcb1S5u9Qfs57myFICaoFBouu4EafMBmxTslTppkFbU6Lu6QqjwsWSvwf4hmzbkftl86mZowajJUbqggNuBz606+vd5oNnjtqjH+vTvxs9WXAvUkp9WT3PnRqgkVfzgwt/pLUbGzHkyM1fUXMvXJRXUc2Io2Lf6zlyuxjBt3wjVaCI1bsgZzeN1taY3n8cxm376bEtWyZxs1BdhajPwJiFXDJSu5fnxKXKEojviCM9A0b3u7JkD7n971ipcDNf+ZvInOr9zDkAL98cDTjSCzchc4tdmcMJX5zReyrk9f00Ib2/Aq9P9H4GLuCdD9jyNAcZXpHej0mPC3jIpWHyWiL1hcr/4Inby7PlUft8Lp1BRMF6tSf/1Qei53S5lKWBNRXbW3MTHO9Bz6nio85XYznLesq19UAv7b08f7llcEp6xnFembe9HaXDPetcpXFCetpxng7yj4TaLGPLOpDt1VZPMAzymQUaPnT7sWjYXuKo9Q3qgwXQryH2K+7GUxDt4CdFlEf4F7c8NGPtvVj6k4Gr///dHoY4+wAOnj3s/+njeByP4/88/gFjNjsT:B506
+^BY2,3,99^FT50,920^BCN,,N,N
+^FD>:PS>564247796>68BR^FS
+^BY3,3,129^FT171,498^BCN,,N,N
+^FD>:PS>564247796>68BR^FS
+^FO13,929^GB772,0,8^FS
+^FO13,650^GB772,0,8^FS
+^FO187,564^GB487,0,8^FS
+^FO629,611^GB153,0,8^FS
+^FO188,611^GB269,0,8^FS
+^PQ1,0,1,Y^XZ";
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private Button btnLoadFile;
+
+        private void btnLoadFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Arquivos ZPL (*.zpl)|*.zpl|Todos os arquivos (.)|*.*",
+                Title = "Selecione um arquivo ZPL"
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    string zplContent = File.ReadAllText(openFileDialog.FileName);
+                    txtZpl.Text = zplContent;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao carregar o arquivo: " + ex.Message);
+                }
+            }
+        }
+    }
+
+
+    public class RawPrinterHelper
+    {
+        [DllImport("winspool.Drv", EntryPoint = "OpenPrinterA", SetLastError = true)]
+        static extern bool OpenPrinter(string szPrinter, out IntPtr hPrinter, IntPtr pd);
+
+        [DllImport("winspool.Drv", SetLastError = true)]
+        static extern bool ClosePrinter(IntPtr hPrinter);
+
+        [DllImport("winspool.Drv", SetLastError = true)]
+        static extern bool StartDocPrinter(IntPtr hPrinter, int level, ref DOCINFOA di);
+
+        [DllImport("winspool.Drv", SetLastError = true)]
+        static extern bool EndDocPrinter(IntPtr hPrinter);
+
+        [DllImport("winspool.Drv", SetLastError = true)]
+        static extern bool StartPagePrinter(IntPtr hPrinter);
+
+        [DllImport("winspool.Drv", SetLastError = true)]
+        static extern bool EndPagePrinter(IntPtr hPrinter);
+
+        [DllImport("winspool.Drv", SetLastError = true)]
+        static extern bool WritePrinter(IntPtr hPrinter, IntPtr pBytes, int dwCount, out int dwWritten);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DOCINFOA
+        {
+            [MarshalAs(UnmanagedType.LPStr)] public string pDocName;
+            [MarshalAs(UnmanagedType.LPStr)] public string pOutputFile;
+            [MarshalAs(UnmanagedType.LPStr)] public string pDataType;
+        }
+
+        public static bool SendStringToPrinter(string szPrinterName, string szString)
+        {
+            IntPtr pBytes;
+            int dwCount = szString.Length;
+            pBytes = Marshal.StringToCoTaskMemAnsi(szString);
+
+            DOCINFOA di = new DOCINFOA
+            {
+                pDocName = "ZPL Document",
+                pDataType = "RAW"
+            };
+
+            bool bSuccess = false;
+            if (OpenPrinter(szPrinterName.Normalize(), out IntPtr hPrinter, IntPtr.Zero))
+            {
+                if (StartDocPrinter(hPrinter, 1, ref di))
+                {
+                    if (StartPagePrinter(hPrinter))
+                    {
+                        bSuccess = WritePrinter(hPrinter, pBytes, dwCount, out _);
+                        EndPagePrinter(hPrinter);
+                    }
+                    EndDocPrinter(hPrinter);
+                }
+                ClosePrinter(hPrinter);
+            }
+
+            Marshal.FreeCoTaskMem(pBytes);
+            return bSuccess;
+        }
+    }
+}
